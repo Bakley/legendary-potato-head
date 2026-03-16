@@ -2,9 +2,9 @@ from flask import Flask
 
 # we import modules from the app to configure
 from app.model.product_repository import InMemoRepo
-from app.view.product_services import ProductServiceLayer
+from app.service.product_services import ProductServiceLayer
 from app.controllers.product_controllers import ProductController
-from app.controllers.product_routes import create_routes
+from app.routing.product_routes import create_routes
 
 def create_app():
     # instantiate the product flask app as MKG(Make Kenya Great)
@@ -19,5 +19,6 @@ def create_app():
 
     # register some routes
     MKG.register_blueprint(product_routes)
+
     return MKG
 

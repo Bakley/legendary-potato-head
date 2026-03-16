@@ -5,18 +5,19 @@
 
 # We are creating a shop that stores precious metals and stones/jems
 # Gold, Silver, Platinum, Copper, Tsavorite
-
 class Product:
-    def __init__(self, price, weight, color, durability, name):
-        self.value =  price
-        self.weight = weight
-        self.shiny = color
-        self.durability = durability
+    def __init__(self, name, price, weight, color, durability):
         self.name = name
+        self.price = price
+        self.weight = weight
+        self.color = color
+        self.durability = durability
 
     def to_dict(self):
         return {
-            "name" : self.name,
-            "color" : self.shiny,
-            "wieght": self.weight
+            "name": self.name,
+            "price": self.price,
+            "weight": self.weight,
+            "color": self.color,
+            "durability": self.durability
         }

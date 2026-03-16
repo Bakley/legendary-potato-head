@@ -1,11 +1,10 @@
-from app.view.product_services import ProductServiceLayer
-
 class ProductController:
 
     def __init__(self, ProductServiceLayer):
         self.service = ProductServiceLayer
 
     def create_product(self, data):
+
         return self.service.create_data(data)
     
     def fetch_all_data(self):
