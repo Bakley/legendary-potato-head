@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import random
 
 from flask import Flask, request, jsonify, g
 
@@ -53,14 +54,26 @@ def start_db():
             ("The alchemist", "paulo coehlo", "fictional", 1991, 1), 
             ("thinking, fast and slow", "Daniel Kahneman", "Non-fiction", 2011, 1)
         ]
+
+        # Generate a random collection of 100 books
+        genres = ["fictional", "Non-fiction", "History", "self help", "academia", "academia", "philopsophy"]
+        for item in range(1, 101):
+            title = f"Book, {item}"
+            author = f"Author {item}"
+            genre = random.choice(genres)
+            year_pub = random.randint(1980, 2025)
+            available = random.choice([0,1])
+
+            reading_material.append((title, author, genre, year_pub, available))
+
+
         # DML
-        for item in reading_material:
-            db.execute("""
+        db.executemany("""
                        INSERT INTO books 
                             (title, author, genre, year_pub, available) 
                        VALUES 
                             (?,?,?,?,?)
-            """, (*item,)
+            """, reading_material
             )
 
     # TCL
@@ -85,7 +98,7 @@ def api_response(data=None, message="", status_code=200):
 
     if data is not None:
         payload["data"] = data
-    return jsonify(payload), 200
+    return jsonify(payload), status_code
 
 def error_response(message, status_code=400):
     """Shortcut for error messages"""
@@ -93,6 +106,25 @@ def error_response(message, status_code=400):
 
 
 # ENDPOINTS
+# we do a fetch(GET Request) form the books Resource
+@wakadinali.route("/api/books", methods=["GET"])
+def fetch_books():
+    # We make a connection to the database
+    db = get_database()
+
+    # we structure out a basic query
+    query = "SELECT * FROM books"
+
+    # you execute the query and get the data or none
+    row_from_db = db.execute(query).fetchmany()
+
+    # parse the data to a python object
+    obj = [dict(item) for item in row_from_db]
+
+    # return the api_response
+    return api_response(data=obj, message="Fetch was successful", status_code=200)
+
+
 
 # run the app and start the db process
 if __name__ == "__main__":
